@@ -1,25 +1,13 @@
 # Graphs
 
-Graphs are data structures made up of nodes (vertices) connected by edges. They can be:
+## Key Concepts
 
-- **Directed or undirected**: Edges may have a direction or not.
-- **Weighted or unweighted**: Edges may have associated weights.
+- **Graphs** are used in social networks, transportation systems, and many other applications.
+- When two nodes are connected, they are called **adjacent**.
+- If the connections (**edges**) have a direction, the graph is called a **directed graph**.
+- Edges can also have **weights**, representing the strength or cost of a connection.
 
-## Applications
+## Example
 
-- Representing relationships (e.g., social networks, transportation systems)
-- Modeling trees (a special case of graphs with no cycles)
-
-## Representations
-
-- **Adjacency list**: Space-efficient, lists neighbors for each node.
-- **Adjacency matrix**: 2D array, easier for some algorithms.
-
-## Algorithms
-
-- **Traversal**: Depth-First Search (DFS), Breadth-First Search (BFS)
-- **Problems solved**:
-  - Finding shortest paths
-  - Detecting cycles
-
-Graphs are fundamental in computer science and widely used in real-world applications.
+- Graphs can be used to find the **shortest path** between two nodes.
+- For example, in a map of cities, **nodes** represent cities and **edge weights** can represent travel distances.
