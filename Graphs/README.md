@@ -54,3 +54,61 @@ Remove Node:   O(V²)
 ```
 
 > **Tip:** In graph problems, we usually use `V` (vertices/nodes) and `E` (edges) to describe time and space complexity.
+
+## Adjacency List
+
+- Another way to represent the edges in a graph is by using an **adjacency list**, which is typically an array (or map) of linked lists (or dynamic arrays).
+- With an adjacency list, we only store the edges that actually exist in the graph.
+- **Space Complexity:** Only one entry per edge is needed, so the space complexity is **O(V + E)**, where `V` is the number of vertices and `E` is the number of edges.
+
+### Worst Case: Dense Graph
+
+- In a **dense graph**, every node is connected to every other node.
+- The total number of edges:  
+   \( E = V \times (V - 1) \) (for a directed graph, without self-loops)
+- So, \( E = V^2 - V \)
+- For complexity analysis, we focus on the fastest-growing term, so we drop the `-V` and say the space complexity is **O(V²)** in the worst case.
+- In general, **space complexity** is **O(V + E)**, but for dense graphs, this becomes **O(V²)**.
+
+---
+
+### Operations & Their Complexities
+
+| Operation          | Complexity | Notes                                                                                 |
+| ------------------ | ---------- | ------------------------------------------------------------------------------------- |
+| **Add Node**       | O(1)       | Add a new entry to the adjacency list                                                 |
+| **Remove Node**    | O(V)       | Remove the node and all references to it in other lists                               |
+| **Add Edge**       | O(K)       | `K` is the number of neighbors; need to check for duplicates unless it's a multigraph |
+| **Remove Edge**    | O(K)       | Remove from the list of neighbors                                                     |
+| **Query Edge**     | O(K)       | Search through the neighbors                                                          |
+| **Find Neighbors** | O(K)       | Direct access to the list of neighbors                                                |
+
+- For **multigraphs** (where multiple edges between the same nodes are allowed), you can add edges in **O(1)** time since you don't need to check for duplicates.
+
+#### Notes:
+
+- `K` is the number of neighbors (edges) for a given node. In the worst case, `K = V`.
+- **Removing a node** requires removing its entry and ensuring no other node points to it, which is **O(V)**.
+- **Adding an edge**: If you need to check for duplicates, it's **O(K)**; otherwise, for multigraphs, it's **O(1)**.
+- **Removing or querying an edge**: Also **O(K)**, as you may need to search the list.
+
+---
+
+### Matrix vs List: Summary Table
+
+| Operation          | Adjacency Matrix | Adjacency List |
+| ------------------ | :--------------: | :------------: |
+| **Space**          |      O(V²)       |    O(V + E)    |
+| **Add Edge**       |       O(1)       |      O(K)      |
+| **Query Edge**     |       O(1)       |      O(K)      |
+| **Remove Edge**    |       O(1)       |      O(K)      |
+| **Find Neighbors** |       O(V)       |      O(K)      |
+| **Add Node**       |      O(V²)       |      O(1)      |
+| **Remove Node**    |      O(V²)       |     O(V²)      |
+
+- **Matrix**: Faster for adding, removing, and querying edges, but uses more space, especially for sparse graphs.
+- **List**: More space-efficient for sparse graphs and faster for finding neighbors.
+
+---
+
+> All time complexities above are for the average case. In the **worst case** (dense graph), adjacency list operations involving all neighbors can degrade to **O(V²)**.
