@@ -112,3 +112,41 @@ Remove Node:   O(V²)
 ---
 
 > All time complexities above are for the average case. In the **worst case** (dense graph), adjacency list operations involving all neighbors can degrade to **O(V²)**.
+
+## Exercise
+
+### Graph Class Design
+
+Design a `Graph` class with the following requirements:
+
+#### Node (Private Inner Class)
+
+- **Field:** `label: string`
+  - The label represents the node's identity.
+  - In real applications, this could be an object (e.g., a city, person, or job), but for simplicity, use a string.
+
+#### Graph (Public API)
+
+- **addNode(label: string): void**
+  - Adds a node with the given label to the graph.
+  - Internally, wraps the label in a node object. This implementation detail is hidden from users.
+- **removeNode(label: string): void**
+  - Removes the node with the specified label from the graph.
+- **addEdge(from: string, to: string): void**
+  - Adds an edge between the nodes with the given labels.
+- **removeEdge(from: string, to: string): void**
+  - Removes the edge between the specified nodes.
+- **print(): void**
+  - Prints the graph in the format:  
+     `A is connected to [B, C]`  
+     `B is connected to [A]`
+  - Note: Ideally, the `print` method should not be part of the graph class, as the graph should not be concerned with its representation. In real applications, visualization would be handled elsewhere.
+
+---
+
+**Instructions:**
+
+- Create a `Graph` class.
+- Implement a private `Node` class inside `Graph` (not visible to users).
+- The `Node` class should have a `label` field of type `string`.
+- Use the public methods above to manage nodes and edges.
