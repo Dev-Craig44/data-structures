@@ -1,0 +1,16 @@
+{
+  "name": "graphs",
+  "version": "1.0.0",
+  "description": "- **Graphs** are used in social networks, transportation systems, and many other applications. - When two nodes are connected, they are called **adjacent**. - If the connections (**edges**) have a direction, the graph is called a **directed graph**. - Edges can also have **weights**, representing the strength or cost of a connection.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}
