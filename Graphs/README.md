@@ -115,19 +115,19 @@ Remove Node:   O(V²)
 
 ## Exercise
 
-### Graph Class Design
+### Graph Class Design #1
 
 Design a `Graph` class with the following requirements:
 
-#### Node (Private Inner Class)
+#### Node (Private Inner Class) #2
 
-- **Field:** `label: string`
+- **Field:** `label: string` #3
   - The label represents the node's identity.
   - In real applications, this could be an object (e.g., a city, person, or job), but for simplicity, use a string.
 
 #### Graph (Public API)
 
-- **addNode(label: string): void**
+- **addNode(label: string): void** #4
   - Adds a node with the given label to the graph.
   - Internally, wraps the label in a node object. This implementation detail is hidden from users.
 - **removeNode(label: string): void**
@@ -136,7 +136,7 @@ Design a `Graph` class with the following requirements:
   - Adds an edge between the nodes with the given labels.
 - **removeEdge(from: string, to: string): void**
   - Removes the edge between the specified nodes.
-- **print(): void**
+- **print(): void** #6
   - Prints the graph in the format:  
      `A is connected to [B, C]`  
      `B is connected to [A]`
