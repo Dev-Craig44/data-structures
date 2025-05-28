@@ -150,3 +150,54 @@ Design a `Graph` class with the following requirements:
 - Implement a private `Node` class inside `Graph` (not visible to users).
 - The `Node` class should have a `label` field of type `string`.
 - Use the public methods above to manage nodes and edges.
+
+## Traversal Algorithms
+
+Graph traversal is the process of visiting all the nodes in a graph, starting from a given node. Unlike trees, graphs do not have a designated root node, so traversal can begin from any node. The nodes visited during traversal are those reachable from the starting node.
+
+**Real-world example:**  
+Finding all people who are directly or indirectly connected to a person in a social network graph.
+
+### Visual Example
+
+Suppose we have the following graph:
+
+```text
+A --- B
+|     |
+C --- D
+```
+
+- **Nodes:** A, B, C, D
+- **Edges:** (A-B), (A-C), (B-D), (C-D)
+
+### Depth-First Search (DFS)
+
+- Starts at a given node and explores as far as possible along each branch before backtracking.
+- Can be implemented using recursion (call stack) or an explicit stack (iteration).
+- Useful for tasks like detecting cycles, pathfinding, and topological sorting.
+
+**DFS Example (starting from A):**
+
+```text
+Visit: A → B → D → C
+```
+
+### Breadth-First Search (BFS)
+
+- Starts at a given node and explores all its neighbors before moving to the next level of neighbors.
+- Implemented using a queue to keep track of nodes to visit next.
+- Useful for finding the shortest path in unweighted graphs and for level-order traversal.
+
+**BFS Example (starting from A):**
+
+```text
+Visit: A → B → C → D
+```
+
+**Key Points:**
+
+- In trees, traversal always starts from the root, and all nodes are reachable from it.
+- In graphs, there may be multiple connected components, so traversal from a node only visits nodes in its component.
+
+---
