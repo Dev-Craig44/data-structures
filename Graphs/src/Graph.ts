@@ -67,4 +67,49 @@ export class Graph {
       }
     }
   }
+
+  // Helper method to remove a node from a neighbors array if present
+  private removeNeighbor(neighbors: Node[], target: Node): void {
+    // find the index of the targeted node
+    const index = neighbors.indexOf(target);
+    // check if the node connected is there before removing it
+    if (index !== -1) {
+      neighbors.splice(index, 1);
+    }
+  }
+
+  // looking at this, from the outside, we always pass a string from the outside
+  // we don't know that internally this graph uses a node object because that is **implementation detail***
+  public removeNode(label: string): void {
+    // we gotta make sure that this string represents a valid node
+    const node = this.nodes.get(label);
+    if (!node) return;
+
+    // if we get here we have a valid node
+    // go to the adjacency list to remove the node
+    // if that node is connected to our node, we have to make sure we remove the connection
+    for (let [_, neighbors] of this.adjacencyList.entries()) {
+      this.removeNeighbor(neighbors, node);
+    }
+    // delete the node, and it's adjacency list
+    this.adjacencyList.delete(node);
+    this.nodes.delete(label);
+  }
+
+  public removeEdge(from: string, to: string): void {
+    // get the [from] and [to] nodes
+    const fromNode = this.nodes.get(from);
+    const toNode = this.nodes.get(to);
+
+    // if we don't have either of these, we are just going to return, not yell at them
+    if (!fromNode || !toNode) {
+      return;
+    }
+
+    // get the neighbors array for fromNode and remove toNode from it
+    const neighbors = this.adjacencyList.get(fromNode);
+    if (neighbors) {
+      this.removeNeighbor(neighbors, toNode);
+    }
+  }
 }

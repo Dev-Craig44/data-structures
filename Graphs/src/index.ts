@@ -8,6 +8,7 @@ function main() {
   graph.addNode("C");
   graph.addEdge("A", "B");
   graph.addEdge("A", "C");
+  graph.removeNode("A");
   graph.addEdge("B", "C");
   graph.print();
 }
