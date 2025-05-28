@@ -201,3 +201,41 @@ Visit: A → B → C → D
 - In graphs, there may be multiple connected components, so traversal from a node only visits nodes in its component.
 
 ---
+
+```
+[C]           // Start from node C
+↓
+[A]           // C is connected to A
+↓
+[B]           // A is connected to B (excluding already visited nodes)
+↓
+[E]           // B is connected to E (excluding already visited nodes)
+↓
+[D]           // E is connected to D (excluding already visited nodes)
+```
+
+This sequence shows the order in which nodes are discovered and visited during a depth-first traversal starting from node C.
+
+Here’s a clearer version of the content:
+
+```
+[C]           // Start from node C
+↓
+[A, B, D]     // C is connected to A, B, D
+↓
+[A]           // Visit A next
+↓
+[B, D, E]     // A is connected to B, D, E (excluding already visited nodes)
+↓
+[B]           // Visit B next
+↓
+[D, E]        // B is connected to D, E (excluding already visited nodes)
+↓
+[D]           // Visit D next
+↓
+[E]           // D is connected to E (excluding already visited nodes)
+↓
+[E]           // Visit E next (no new neighbors)
+```
+
+This sequence shows the order in which nodes are discovered and visited during a breadth-first traversal starting from node C.
