@@ -112,4 +112,36 @@ export class Graph {
       this.removeNeighbor(neighbors, toNode);
     }
   }
+  // Public method to start a depth-first traversal from a node label
+  public traversalDepthFirst(root: string): void {
+    // Look up the node object by its label
+    const node = this.nodes.get(root);
+    if (!node) {
+      // If the node doesn't exist, exit early
+      return;
+    }
+
+    // Start the recursive traversal with an empty set of visited nodes
+    this.traverseDepthFirst(node, new Set());
+  }
+
+  // Private helper for recursive depth-first traversal
+  private traverseDepthFirst(root: Node, visited: Set<Node>): void {
+    // If we've already visited this node, do nothing (prevents cycles)
+    if (visited.has(root)) return;
+
+    // Process the node (here, print its label)
+    console.log(root.label);
+    // Mark the node as visited
+    visited.add(root);
+
+    // Get the neighbors of the current node from the adjacency list
+    const neighbors = this.adjacencyList.get(root);
+    if (neighbors) {
+      // Recursively visit each unvisited neighbor
+      for (const neighbor of neighbors) {
+        if (!visited.has(neighbor)) this.traverseDepthFirst(neighbor, visited);
+      }
+    }
+  }
 }

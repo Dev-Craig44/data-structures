@@ -6,10 +6,11 @@ function main() {
   graph.addNode("A");
   graph.addNode("B");
   graph.addNode("C");
+  graph.addNode("D");
   graph.addEdge("A", "B");
   graph.addEdge("A", "C");
-  graph.removeNode("A");
-  graph.addEdge("B", "C");
-  graph.print();
+  graph.addEdge("B", "D");
+  graph.addEdge("D", "C");
+  graph.traversalDepthFirst("A");
 }
 main();
