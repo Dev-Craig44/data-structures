@@ -239,3 +239,6 @@ Here’s a clearer version of the content:
 ```
 
 This sequence shows the order in which nodes are discovered and visited during a breadth-first traversal starting from node C.
+
+**Problem:**  
+I made a mistake in my commit message and had already pushed my branch to the remote. When I fixed the message with my `git fixmsg` alias, this created two different versions: one on the remote and one on my machine. To resolve this, I created a `git pushforce` alias that uses `git push --force-with-lease origin HEAD` to make the remote reflect what's on my machine. This solved the problem.
