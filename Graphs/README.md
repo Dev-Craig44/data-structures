@@ -242,3 +242,45 @@ This sequence shows the order in which nodes are discovered and visited during a
 
 **Problem:**  
 I made a mistake in my commit message and had already pushed my branch to the remote. When I fixed the message with my `git fixmsg` alias, this created two different versions: one on the remote and one on my machine. To resolve this, I created a `git pushforce` alias that uses `git push --force-with-lease origin HEAD` to make the remote reflect what's on my machine. This solved the problem.
+
+### Iterative Depth-First Search (DFS) Traversal
+
+To implement DFS iteratively, we use an explicit stack to manage which nodes to visit next, mimicking the call stack used in recursion.
+
+#### How the Call Stack Works (Recap)
+
+- When you call a method like `methodA(x)`, Java (or any language) pushes the call and its arguments onto the call stack:
+  ```
+  Call Stack: [x]
+  ```
+- If `methodA(x)` calls `methodB(y)` before finishing, `y` is pushed on top:
+  ```
+  Call Stack: [x, y]
+  ```
+- When `methodB(y)` completes, `y` is popped off, and execution resumes in `methodA(x)`:
+  ```
+  Call Stack: [x]
+  ```
+- This mechanism allows the program to "remember" the state of each method call.
+
+#### Applying This to Iterative DFS
+
+- In recursive DFS, the call stack keeps track of which nodes to return to.
+- In iterative DFS, we use our own stack data structure to track nodes to visit.
+
+**Example Steps:**
+
+1. Push the starting node onto the stack.
+   ```
+   Stack: [start]
+   ```
+2. While the stack is not empty:
+   - Pop a node from the stack.
+   - If it hasn't been visited:
+     - Mark it as visited.
+     - Push all its unvisited neighbors onto the stack.
+
+This approach ensures we explore as far as possible along each branch before backtracking, just like recursive DFS.
+
+**Key Point:**  
+Using an explicit stack in iterative DFS serves the same purpose as the call stack in recursion: it remembers where to return after exploring deeper nodes.
