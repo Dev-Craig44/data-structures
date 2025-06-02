@@ -4,7 +4,8 @@
   "description": "- **Graphs** are used in social networks, transportation systems, and many other applications. - When two nodes are connected, they are called **adjacent**. - If the connections (**edges**) have a direction, the graph is called a **directed graph**. - Edges can also have **weights**, representing the strength or cost of a connection.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon --watch src --ext ts --exec \"npx ts-node src/index.ts\""
   },
   "keywords": [],
   "author": "",
