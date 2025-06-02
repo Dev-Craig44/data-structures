@@ -11,6 +11,6 @@ function main() {
   graph.addEdge("A", "C");
   graph.addEdge("B", "D");
   graph.addEdge("D", "C");
-  graph.traversalDepthFirst("A");
+  graph.traverseDepthFirst("A");
 }
 main();

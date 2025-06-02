@@ -56,7 +56,9 @@ export class Graph {
     if (neighbors) this.removeNeighbor(neighbors, toNode);
   }
 
-  public traversalDepthFirst(root: string): void {
+  // a name of our methods should never have anyuthing in it speaking to the implementation of the method. This is bad practice.
+  // if tomorrow we change the implementation detail of our method that means that we would have to change the name to.
+  public traversalDepthFirstRec(root: string): void {
     // Valid the root node
     const node = this.nodes.get(root);
     if (!node) return;
@@ -66,10 +68,10 @@ export class Graph {
     // current = pop()
     // visit(current)
     // push each unvisited neighbor to the stack
-    this.traverseDepthFirst(node, new Set());
+    this.traverseDepthFirstRec(node, new Set());
   }
 
-  private traverseDepthFirst(root: Node, visited: Set<Node>): void {
+  private traverseDepthFirstRec(root: Node, visited: Set<Node>): void {
     // every time we reach a node
     // we should visit it
     if (visited.has(root)) return;
@@ -78,7 +80,44 @@ export class Graph {
     const neighbors = this.adjacencyList.get(root);
     if (neighbors) {
       for (const neighbor of neighbors) {
-        if (!visited.has(neighbor)) this.traverseDepthFirst(neighbor, visited);
+        if (!visited.has(neighbor))
+          this.traverseDepthFirstRec(neighbor, visited);
+      }
+    }
+  }
+
+  public traverseDepthFirst(root: string) {
+    // Valid the root node
+    const node = this.nodes.get(root);
+    if (!node) {
+      return;
+    }
+    // create visited stack
+    const visited: Set<Node> = new Set();
+    // create stack
+    const stack: Node[] = [];
+    // push(root)
+    stack.push(node);
+    // while(stack is not empty)
+    while (stack.length !== 0) {
+      // current = pop()
+      let current = stack.pop();
+      // visit(current)
+      if (!current) return;
+      if (visited.has(current)) continue;
+
+      console.log(current);
+      visited.add(current);
+
+      // visited all unvisited neighbors
+      const neighbors = this.adjacencyList.get(current);
+      // push each unvisited neighbor to the stack
+      if (neighbors) {
+        for (let neighbor of neighbors) {
+          if (!visited.has(neighbor)) {
+            stack.push(neighbor);
+          }
+        }
       }
     }
   }
