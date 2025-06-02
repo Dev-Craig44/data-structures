@@ -57,12 +57,21 @@ export class Graph {
   }
 
   public traversalDepthFirst(root: string): void {
+    // Valid the root node
     const node = this.nodes.get(root);
     if (!node) return;
+
+    // push(root)
+    // while(stack is not empty)
+    // current = pop()
+    // visit(current)
+    // push each unvisited neighbor to the stack
     this.traverseDepthFirst(node, new Set());
   }
 
   private traverseDepthFirst(root: Node, visited: Set<Node>): void {
+    // every time we reach a node
+    // we should visit it
     if (visited.has(root)) return;
     console.log(root.label);
     visited.add(root);
