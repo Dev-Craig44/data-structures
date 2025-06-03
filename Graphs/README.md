@@ -284,3 +284,89 @@ This approach ensures we explore as far as possible along each branch before bac
 
 **Key Point:**  
 Using an explicit stack in iterative DFS serves the same purpose as the call stack in recursion: it remembers where to return after exploring deeper nodes.
+
+### Exercise: Iterative Breadth-First Traversal (BFS)
+
+Let's walk through an iterative BFS using a queue. At each step, we'll show the state of the queue and which node is visited.
+
+**Legend:**
+
+- **Front**: The front of the queue (where nodes are removed)
+- **Back**: The back of the queue (where nodes are added)
+
+---
+
+#### 1. Start by adding the starting node (`A`) to the queue:
+
+```
+Queue: Front [A] Back
+```
+
+---
+
+#### 2. Begin the loop:
+
+- Remove `A` from the front of the queue.
+- Visit `A`.
+
+```
+Visited: A
+Queue: Front [] Back
+```
+
+- Add `A`'s unvisited neighbors (`B`, `C`) to the back of the queue.
+
+```
+Queue: Front [B, C] Back
+```
+
+---
+
+#### 3. Next iteration:
+
+- Remove `B` from the front.
+- Visit `B`.
+
+```
+Visited: A, B
+Queue: Front [C] Back
+```
+
+- Add `B`'s unvisited neighbor (`D`) to the back.
+
+```
+Queue: Front [C, D] Back
+```
+
+---
+
+#### 4. Next iteration:
+
+- Remove `C` from the front.
+- Visit `C`.
+
+```
+Visited: A, B, C
+Queue: Front [D] Back
+```
+
+---
+
+#### 5. Final iteration:
+
+- Remove `D` from the front.
+- Visit `D`.
+
+```
+Visited: A, B, C, D
+Queue: Front [] Back
+```
+
+---
+
+**Summary:**  
+The order of nodes visited using iterative BFS is:
+
+```
+A → B → C → D
+```
