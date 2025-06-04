@@ -459,3 +459,144 @@ X             P
   - **Graph:** Structure of nodes and edges.
 
 ---
+
+## Exercise: Cycle Detection
+
+Topological sorting **does not work** if the graph contains a cycle. So, how can we detect a cycle in a directed graph?
+
+### Cycle Detection with DFS and Node States
+
+To detect cycles, we use **three sets** (or "colors") to track the state of each node during traversal:
+
+1. **All nodes**: Nodes we have not yet started visiting.
+2. **Visiting**: Nodes currently in the recursion stack (being explored).
+3. **Visited**: Nodes for which all descendants have been fully explored.
+
+- The key difference:
+  - A node is in the **visiting** set while we are exploring its descendants.
+  - Once all its descendants are explored, we move it to the **visited** set.
+
+#### Interview Variant: "Coloring" Nodes
+
+- Instead of "visiting" and "visited," you may see nodes colored as **white** (unvisited), **gray** (visiting), and **black** (visited).
+
+---
+
+### Example 1: No Cycle
+
+Graph:
+
+```
+A → B, C
+B → C
+D → A
+```
+
+**Step-by-step:**
+
+1. Add all nodes to the "all" set:  
+   `[A, B, C, D]`
+2. Start DFS from `A`:
+   - all: `[B, C, D]`
+   - visiting: `[A]`
+3. Explore neighbors of `A` (`B`):
+   - all: `[C, D]`
+   - visiting: `[A, B]`
+4. Explore neighbors of `B` (`C`):
+   - all: `[D]`
+   - visiting: `[A, B, C]`
+   - `C` has no neighbors, so move `C` to visited:
+     - all: `[D]`
+     - visiting: `[A, B]`
+     - visited: `[C]`
+   - Done with `B`, move to visited:
+     - all: `[D]`
+     - visiting: `[A]`
+     - visited: `[C, B]`
+   - Back to `A`. Next neighbor is `C`, but it's already visited.
+   - Done with `A`, move to visited:
+     - all: `[D]`
+     - visiting: `[]`
+     - visited: `[C, B, A]`
+5. Still one node left (`D`). Start DFS from `D`:
+   - all: `[]`
+   - visiting: `[D]`
+   - `D` has neighbor `A`, but `A` is already visited.
+   - Done with `D`, move to visited:
+     - all: `[]`
+     - visiting: `[]`
+     - visited: `[C, B, A, D]`
+
+**Result:**  
+No cycle found.
+
+---
+
+### Example 2: Cycle Exists
+
+Graph:
+
+```
+A → B
+B → C
+C → A
+D → A
+```
+
+**Step-by-step:**
+
+1. Add all nodes to the "all" set:  
+   `[A, B, C, D]`
+2. Start DFS from `A`:
+   - all: `[B, C, D]`
+   - visiting: `[A]`
+3. Explore neighbor `B`:
+   - all: `[C, D]`
+   - visiting: `[A, B]`
+4. Explore neighbor `C`:
+   - all: `[D]`
+   - visiting: `[A, B, C]`
+5. `C` has neighbor `A`.
+   - `A` is **already in the visiting set** (recursion stack).
+   - This means we've found a **cycle**: there is a path from `A` → `B` → `C` → `A`.
+
+**Key Insight:**  
+If during DFS you reach a node that is already in the **visiting** set, a cycle exists.
+
+---
+
+### Tracking the Cycle Path
+
+To print the nodes involved in the cycle, keep a **parent map** during traversal:
+
+| Node | Parent |
+| ---- | ------ |
+| A    | null   |
+| B    | A      |
+| C    | B      |
+
+When you detect a cycle (e.g., `C` → `A`), you can reconstruct the path by following parents:  
+`A → B → C → A`
+
+---
+
+### Implementation Exercise
+
+- **Implement** this algorithm.
+- **Add** a new method to your `Graph` class: `hasCycle()`.
+- This method should return a `boolean` indicating whether the graph contains a cycle.
+
+---
+
+**Summary Table: Node States**
+
+| State    | Meaning                               | Color (variant) |
+| -------- | ------------------------------------- | --------------- |
+| All      | Not yet started                       | White           |
+| Visiting | In current DFS path (recursion stack) | Gray            |
+| Visited  | Fully explored (all descendants done) | Black           |
+
+---
+
+> **Tip:**  
+> Cycle detection is essential for algorithms like topological sort, which only work on Directed Acyclic Graphs (DAGs).
