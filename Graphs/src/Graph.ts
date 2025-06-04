@@ -24,11 +24,16 @@ export class Graph {
   }
 
   public print(): void {
+    // loop through the the [keys] and [values] of the whole graph
     for (const [node, neighbors] of this.adjacencyList.entries()) {
+      // long as this node has edges or connections
       if (neighbors.length > 0) {
+        // use a comma and a space to join together each neighbors' label that we map through after we give it a nieghborLabels variable for all this to go into
         const neighborLabels = neighbors
           .map((neighbor) => neighbor.label)
           .join(", ");
+
+        // print the current [node].label -> [neighborLabels]
         console.log(`${node.label} -> ${neighborLabels}`);
       }
     }
@@ -64,11 +69,6 @@ export class Graph {
     const node = this.nodes.get(root);
     if (!node) return;
 
-    // push(root)
-    // while(stack is not empty)
-    // current = pop()
-    // visit(current)
-    // push each unvisited neighbor to the stack
     this.traverseDepthFirstRec(node, new Set());
   }
 
@@ -168,5 +168,65 @@ export class Graph {
         }
       }
     }
+  }
+
+  public topologicalSort() {
+    // create the stack
+    const stack: Node[] = [];
+
+    // crate the visited Set
+    const visited: Set<Node> = new Set();
+
+    // what node should we pass here?
+    // we should do a DFS, you want to make sure to visit every node in this graph
+    // so make a for loop
+    for (let [_, node] of this.nodes.entries()) {
+      this.topologicalSortRec(node, visited, stack);
+      // once we are done here, our stack is populated with our nodes in the reverse order, so all we have to do is to pop all our items from the stack and put them in a list.
+      const sorted: string[] = [];
+
+      // kick off the loop to reverse the order
+
+      // long as the stack  has at least one thing
+      while (stack.length > 0) {
+        // extract popped node into [node]
+        const node = stack.pop();
+        // if there's an actual node
+        if (node) {
+          // push the label to the sorted list that takes a string[]
+          sorted.push(node.label);
+        }
+      }
+      // finally we return the sort list
+      return sorted;
+    }
+  }
+
+  private topologicalSortRec(
+    node: Node,
+    visited: Set<Node>,
+    stack: Node[]
+  ): void {
+    // let's make sure we are not visiting the same node twice
+    if (visited.has(node)) {
+      return;
+    }
+
+    // otherwise let's mark this node as visited
+    visited.add(node);
+
+    // grab this nodes neighbors
+    const neighbors = this.adjacencyList.get(node);
+    // long as we neighbors
+    if (neighbors) {
+      // recursively, lets visit all the children of this node
+      for (let neighbor of neighbors) {
+        this.topologicalSortRec(neighbor, visited, stack);
+        // once we visited all the children of a given node, then we're ready to push that node onto our stack
+        // so we go really deep in our graph and find nodes that don't have any outgoing edges aka there's nobody depending on them (The Bottom)
+        // so we add these to our stack first, and then when we pop our stack these are going to be the last items in the sorted list
+      }
+    }
+    stack.push(node);
   }
 }
