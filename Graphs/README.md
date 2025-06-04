@@ -370,3 +370,92 @@ The order of nodes visited using iterative BFS is:
 ```
 A → B → C → D
 ```
+
+## Exercise: Topological Sorting
+
+Imagine you have a mobile app project (**P**) that depends on a few other projects. To build your project, all dependencies must be compiled in the correct order. But how do we find the right order? We use a graph!
+
+### Dependency Graph
+
+```
+     -> A ->
+X             P
+     -> B ->
+```
+
+- **P** is our main project.
+- **A**: Image Manipulation library
+- **B**: Data Encryption library
+- Both **A** and **B** depend on **X** (a library of reusable building blocks).
+
+### Build Order Logic
+
+- To build **P**, you must build **A** and **B** first.
+- To build **A** or **B**, you must build **X** first.
+- When we run a topological sort, we could get `XABP` or `XBAP` as valid build orders.
+- The exact order depends on the implementation.
+- **Note:** This algorithm only works on graphs **without cycles**.
+- Such a graph is called a **Directed Acyclic Graph (DAG)**:
+  - **Directed:** Edges have a direction (dependencies point one way).
+  - **Acyclic:** No cycles (no way to start at a node and come back to it by following edges).
+  - **Graph:** A collection of nodes and edges.
+
+---
+
+### Step-by-Step Walkthrough
+
+**Stack:** `[P]`
+
+- Go back to **A**
+  - All children/neighbors of **A** (just **P**) have been visited, so add **A** to the stack.
+  - **Stack:** `[P, A]`
+- Go back to **X**
+  - Not all children of **X** have been visited.
+  - Go to **B**.
+    - Go to **P** (already visited).
+    - Go back to **B**.
+      - All children of **B** have been visited, so add **B** to the stack.
+      - **Stack:** `[P, A, B]`
+- Go back to **X**
+  - All children of **X** have now been visited, so add **X** to the stack.
+  - **Stack:** `[P, A, B, X]`
+- If we pop our stack until it's empty, the nodes come out in the correct build order.
+
+> **Key Insight:**  
+> We go deep in our graph and find nodes that don't have any outgoing edges (dependencies).
+
+---
+
+### What if we started from **P**?
+
+- You wouldn't be able to visit any nodes, since **P** depends on others.
+
+---
+
+### Implementation Notes
+
+- Use a **for loop** and a **depth-first traversal** on each node.
+- This ensures every node in the graph is eventually visited.
+
+---
+
+### Exercise
+
+1. **Build the graph** described above.
+2. **Add all the nodes and edges.**
+3. **Add a new method** to your `Graph` class called `topologicalSort()` that returns a `List<string>`.
+   - This should be a public method.
+   - You will need a private method that does all the recursive work (just like `traverseDepthFirstRec()`).
+   - Instead of printing the node, mark it as visited, recursively visit all its children, and then push it to a stack.
+   - Nodes deeper in the hierarchy will end up at the bottom of the stack—these are the nodes that are dependent on a lot of other nodes.
+
+---
+
+#### **Memory Aid**
+
+- **DAG** = **Directed Acyclic Graph**
+  - **Directed:** Edges have direction (dependencies).
+  - **Acyclic:** No cycles allowed.
+  - **Graph:** Structure of nodes and edges.
+
+---
