@@ -1,4 +1,5 @@
 import { Node } from "./Node";
+import { Queue } from "./Queue";
 
 export class Graph {
   private nodes: Map<string, Node> = new Map();
@@ -116,6 +117,53 @@ export class Graph {
         for (let neighbor of neighbors) {
           if (!visited.has(neighbor)) {
             stack.push(neighbor);
+          }
+        }
+      }
+    }
+  }
+
+  public traverseBreadthFirst(root: string): void {
+    // extract the root parameter into a [node] variable from the nodes list
+    const node = this.nodes.get(root);
+    // validate root [node]
+    if (!node) {
+      return;
+    }
+    // create visited Set<Node>
+    const visited: Set<Node> = new Set();
+    // create new queue, make sure to specify the type
+    const queue = new Queue<Node>();
+    // add [node] to the back of the back
+    queue.enqueue(node);
+
+    // kick off the loop
+
+    // long as the queue isn't empty keep going
+    while (!queue.isEmpty()) {
+      // remove node from front of the queue and store it in [current]
+      const current = queue.dequeue();
+      // if this [current] is undefined, or we been here before, keep it pushing
+      if (!current || visited.has(current)) {
+        continue;
+      }
+
+      //otherwise print it and add it to the visited set
+      console.log(current);
+      visited.add(current);
+
+      // look at all it's unvisited neighbors
+
+      // grab the current node's neightbors
+      const neighbors = this.adjacencyList.get(current);
+
+      // if theres a list go through it
+      if (neighbors) {
+        for (let neighbor of neighbors) {
+          // if our visited list doesn't have current neighbor
+          if (!visited.has(neighbor)) {
+            //add to the back of our queue
+            queue.enqueue(neighbor);
           }
         }
       }

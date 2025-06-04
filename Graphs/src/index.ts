@@ -8,9 +8,9 @@ function main() {
   graph.addNode("C");
   graph.addNode("D");
   graph.addEdge("A", "B");
-  graph.addEdge("A", "C");
   graph.addEdge("B", "D");
   graph.addEdge("D", "C");
-  graph.traverseDepthFirst("A");
+  graph.addEdge("A", "C");
+  graph.traverseBreadthFirst("K");
 }
 main();
