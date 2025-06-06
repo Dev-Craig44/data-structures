@@ -159,7 +159,7 @@ export class Graph {
 
       // if theres a list go through it
       if (neighbors) {
-        for (let neighbor of neighbors) {
+        for (const neighbor of neighbors) {
           // if our visited list doesn't have current neighbor
           if (!visited.has(neighbor)) {
             //add to the back of our queue
@@ -175,31 +175,32 @@ export class Graph {
     const stack: Node[] = [];
 
     // crate the visited Set
-    const visited: Set<Node> = new Set();
+    const visited = new Set<Node>();
 
     // what node should we pass here?
     // we should do a DFS, you want to make sure to visit every node in this graph
     // so make a for loop
-    for (let [_, node] of this.nodes.entries()) {
+    for (const node of this.nodes.values()) {
       this.topologicalSortRec(node, visited, stack);
-      // once we are done here, our stack is populated with our nodes in the reverse order, so all we have to do is to pop all our items from the stack and put them in a list.
-      const sorted: string[] = [];
-
-      // kick off the loop to reverse the order
-
-      // long as the stack  has at least one thing
-      while (stack.length > 0) {
-        // extract popped node into [node]
-        const node = stack.pop();
-        // if there's an actual node
-        if (node) {
-          // push the label to the sorted list that takes a string[]
-          sorted.push(node.label);
-        }
-      }
-      // finally we return the sort list
-      return sorted;
     }
+
+    // once we are done here, our stack is populated with our nodes in the reverse order, so all we have to do is to pop all our items from the stack and put them in a list.
+    const sorted: string[] = [];
+
+    // kick off the loop to reverse the order
+
+    // long as the stack  has at least one thing
+    while (stack.length > 0) {
+      // extract popped node into [node]
+      const node = stack.pop();
+      // if there's an actual node
+      if (node) {
+        // push the label to the sorted list that takes a string[]
+        sorted.push(node.label);
+      }
+    }
+    // finally we return the sort list
+    return sorted;
   }
 
   private topologicalSortRec(
@@ -216,17 +217,62 @@ export class Graph {
     visited.add(node);
 
     // grab this nodes neighbors
-    const neighbors = this.adjacencyList.get(node);
-    // long as we neighbors
-    if (neighbors) {
-      // recursively, lets visit all the children of this node
-      for (let neighbor of neighbors) {
-        this.topologicalSortRec(neighbor, visited, stack);
-        // once we visited all the children of a given node, then we're ready to push that node onto our stack
-        // so we go really deep in our graph and find nodes that don't have any outgoing edges aka there's nobody depending on them (The Bottom)
-        // so we add these to our stack first, and then when we pop our stack these are going to be the last items in the sorted list
-      }
+    // use a default empty array to avoid undefined checks
+    const neighbors = this.adjacencyList.get(node) || [];
+    // recursively, lets visit all the children of this node
+    for (const neighbor of neighbors) {
+      this.topologicalSortRec(neighbor, visited, stack);
+      // once we visited all the children of a given node, then we're ready to push that node onto our stack
+      // so we go really deep in our graph and find nodes that don't have any outgoing edges aka there's nobody depending on them (The Bottom)
+      // so we add these to our stack first, and then when we pop our stack these are going to be the last items in the sorted list
     }
     stack.push(node);
+  }
+
+  public hasCycle(): boolean {
+    // --- Cycle Detection ---
+    // all: nodes not yet visited
+    // visiting: nodes in the current DFS path
+    // visited: nodes fully explored
+
+    const all = new Set<Node>(this.nodes.values());
+    const visiting = new Set<Node>();
+    const visited = new Set<Node>();
+
+    // While there are unvisited nodes, start DFS from one
+    while (all.size !== 0) {
+      // Get any node from 'all'
+      const current = all.values().next().value;
+      // Start DFS; if a cycle is found, return true
+      if (current && this.hasCycleRec(current, all, visiting, visited))
+        return true;
+    }
+    // No cycles found
+    return false;
+  }
+
+  private hasCycleRec(
+    node: Node,
+    all: Set<Node>,
+    visiting: Set<Node>,
+    visited: Set<Node>
+  ): boolean {
+    // Move node from 'all' to 'visiting'
+    all.delete(node);
+    visiting.add(node);
+
+    // ┌── DFS neighbors ──┐
+    for (const neighbor of this.adjacencyList.get(node) || []) {
+      if (visited.has(neighbor)) continue; // Already fully explored
+      if (visiting.has(neighbor)) return true; // Found a cycle!
+      if (this.hasCycleRec(neighbor, all, visiting, visited)) return true;
+    }
+    // └───────────────────┘
+
+    // Move node from 'visiting' to 'visited'
+    visiting.delete(node);
+    visited.add(node);
+
+    return false;
   }
 }
