@@ -1,45 +1,40 @@
 # Graphs
 
+Graphs are powerful data structures used to model relationships in social networks, transportation systems, dependency management, and more. This guide covers key concepts, representations, traversal algorithms, and practical exercises for mastering graphs.
+
+---
+
 ## Key Concepts
 
-- **Graphs** are used in social networks, transportation systems, and many other applications.
-- When two nodes are connected, they are called **adjacent**.
-- If the connections (**edges**) have a direction, the graph is called a **directed graph**.
-- Edges can also have **weights**, representing the strength or cost of a connection.
-
-## Example
-
-- Graphs can be used to find the **shortest path** between two nodes.
-- For example, in a map of cities, **nodes** represent cities and **edge weights** can represent travel distances.
-
-- One way to represent the edges in a graph is by using a **matrix**, specifically a two-dimensional array.
-- If a node in a given row is connected to a node in a given column, this is called an **adjacency matrix**.
-- The main drawback of this approach is the amount of space required to store the matrix.
-- If we have _n_ nodes, the space complexity is **O(n²)**.
-
-## Adjacency Matrix: Pros & Cons
-
-### Space Complexity
-
-- A graph with **1,000 nodes** needs a matrix with **1,000 × 1,000 = 1,000,000 entries**.
-- **Space:** `O(V²)`
+- **Graph:** A collection of nodes (vertices) connected by edges.
+- **Adjacent Nodes:** Two nodes connected by an edge.
+- **Directed Graph:** Edges have a direction (from one node to another).
+- **Weighted Edge:** Edges can have weights (cost, distance, etc.).
 
 ---
 
-### Operations & Their Complexities
+## Graph Representations
 
-| Operation          | Complexity | Notes                                                                           |
-| ------------------ | ---------- | ------------------------------------------------------------------------------- |
-| **Add Node**       | O(V²)      | Must create a new matrix with an extra row/column and copy all entries          |
-| **Remove Node**    | O(V²)      | Allocate a smaller matrix and copy entries                                      |
-| **Add Edge**       | O(1)       | Directly update the matrix (after finding node indices, e.g., via a hash table) |
-| **Remove Edge**    | O(1)       | Same as adding an edge                                                          |
-| **Query Edge**     | O(1)       | Lookup in the matrix                                                            |
-| **Find Neighbors** | O(V)       | Iterate through the entire row for a node                                       |
+### Adjacency Matrix
 
----
+A 2D array where `matrix[i][j]` indicates the presence (and possibly weight) of an edge from node `i` to node `j`.
 
-### Visual Summary
+#### Pros & Cons
+
+- **Space Complexity:**
+  - `O(V²)` for `V` nodes.
+  - Example: 1,000 nodes → 1,000,000 entries.
+- **Operations:**
+
+  | Operation       | Complexity | Notes                                    |
+  | --------------- | ---------- | ---------------------------------------- |
+  | Add Node        | O(V²)      | New matrix with extra row/column         |
+  | Remove Node     | O(V²)      | Allocate smaller matrix and copy entries |
+  | Add/Remove Edge | O(1)       | Direct update (after finding indices)    |
+  | Query Edge      | O(1)       | Lookup in matrix                         |
+  | Find Neighbors  | O(V)       | Iterate through row                      |
+
+#### Visual Summary
 
 ```text
 Adjacency Matrix Stats
@@ -53,48 +48,32 @@ Add Node:      O(V²)
 Remove Node:   O(V²)
 ```
 
-> **Tip:** In graph problems, we usually use `V` (vertices/nodes) and `E` (edges) to describe time and space complexity.
-
-## Adjacency List
-
-- Another way to represent the edges in a graph is by using an **adjacency list**, which is typically an array (or map) of linked lists (or dynamic arrays).
-- With an adjacency list, we only store the edges that actually exist in the graph.
-- **Space Complexity:** Only one entry per edge is needed, so the space complexity is **O(V + E)**, where `V` is the number of vertices and `E` is the number of edges.
-
-### Worst Case: Dense Graph
-
-- In a **dense graph**, every node is connected to every other node.
-- The total number of edges:  
-   \( E = V \times (V - 1) \) (for a directed graph, without self-loops)
-- So, \( E = V^2 - V \)
-- For complexity analysis, we focus on the fastest-growing term, so we drop the `-V` and say the space complexity is **O(V²)** in the worst case.
-- In general, **space complexity** is **O(V + E)**, but for dense graphs, this becomes **O(V²)**.
+> **Tip:** Use `V` (vertices) and `E` (edges) for complexity analysis.
 
 ---
 
-### Operations & Their Complexities
+### Adjacency List
 
-| Operation          | Complexity | Notes                                                                                 |
-| ------------------ | ---------- | ------------------------------------------------------------------------------------- |
-| **Add Node**       | O(1)       | Add a new entry to the adjacency list                                                 |
-| **Remove Node**    | O(V)       | Remove the node and all references to it in other lists                               |
-| **Add Edge**       | O(K)       | `K` is the number of neighbors; need to check for duplicates unless it's a multigraph |
-| **Remove Edge**    | O(K)       | Remove from the list of neighbors                                                     |
-| **Query Edge**     | O(K)       | Search through the neighbors                                                          |
-| **Find Neighbors** | O(K)       | Direct access to the list of neighbors                                                |
+An array or map where each node stores a list of its neighbors.
 
-- For **multigraphs** (where multiple edges between the same nodes are allowed), you can add edges in **O(1)** time since you don't need to check for duplicates.
+- **Space Complexity:** `O(V + E)` (efficient for sparse graphs)
+- **Dense Graphs:** Up to `O(V²)` edges.
 
-#### Notes:
+#### Operations
 
-- `K` is the number of neighbors (edges) for a given node. In the worst case, `K = V`.
-- **Removing a node** requires removing its entry and ensuring no other node points to it, which is **O(V)**.
-- **Adding an edge**: If you need to check for duplicates, it's **O(K)**; otherwise, for multigraphs, it's **O(1)**.
-- **Removing or querying an edge**: Also **O(K)**, as you may need to search the list.
+| Operation       | Complexity | Notes                                                                |
+| --------------- | ---------- | -------------------------------------------------------------------- |
+| Add Node        | O(1)       | Add entry to list/map                                                |
+| Remove Node     | O(V)       | Remove node and all references                                       |
+| Add/Remove Edge | O(K)       | `K` = number of neighbors; O(1) for multigraphs (no duplicate check) |
+| Query Edge      | O(K)       | Search neighbor list                                                 |
+| Find Neighbors  | O(K)       | Direct access                                                        |
+
+- `K` = number of neighbors (≤ V).
 
 ---
 
-### Matrix vs List: Summary Table
+### Matrix vs List: Summary
 
 | Operation          | Adjacency Matrix | Adjacency List |
 | ------------------ | :--------------: | :------------: |
@@ -106,276 +85,128 @@ Remove Node:   O(V²)
 | **Add Node**       |      O(V²)       |      O(1)      |
 | **Remove Node**    |      O(V²)       |     O(V²)      |
 
-- **Matrix**: Faster for adding, removing, and querying edges, but uses more space, especially for sparse graphs.
-- **List**: More space-efficient for sparse graphs and faster for finding neighbors.
+- **Matrix:** Fast edge operations, high space cost for sparse graphs.
+- **List:** Space-efficient for sparse graphs, fast neighbor access.
 
 ---
 
-> All time complexities above are for the average case. In the **worst case** (dense graph), adjacency list operations involving all neighbors can degrade to **O(V²)**.
+## Example: Shortest Path
 
-## Exercise
-
-### Graph Class Design #1
-
-Design a `Graph` class with the following requirements:
-
-#### Node (Private Inner Class) #2
-
-- **Field:** `label: string` #3
-  - The label represents the node's identity.
-  - In real applications, this could be an object (e.g., a city, person, or job), but for simplicity, use a string.
-
-#### Graph (Public API)
-
-- **addNode(label: string): void** #4
-  - Adds a node with the given label to the graph.
-  - Internally, wraps the label in a node object. This implementation detail is hidden from users.
-- **removeNode(label: string): void**
-  - Removes the node with the specified label from the graph.
-- **addEdge(from: string, to: string): void**
-  - Adds an edge between the nodes with the given labels.
-- **removeEdge(from: string, to: string): void**
-  - Removes the edge between the specified nodes.
-- **print(): void** #6
-  - Prints the graph in the format:  
-     `A is connected to [B, C]`  
-     `B is connected to [A]`
-  - Note: Ideally, the `print` method should not be part of the graph class, as the graph should not be concerned with its representation. In real applications, visualization would be handled elsewhere.
+Graphs can model cities (nodes) and roads (edges with weights as distances). Algorithms like Dijkstra’s use these representations to find shortest paths.
 
 ---
 
-**Instructions:**
+## Exercise: Graph Class Design
 
-- Create a `Graph` class.
-- Implement a private `Node` class inside `Graph` (not visible to users).
-- The `Node` class should have a `label` field of type `string`.
-- Use the public methods above to manage nodes and edges.
+Design a `Graph` class with:
+
+- **Private Inner Class:** `Node` with a `label: string`.
+- **Public API:**
+  - `addNode(label: string): void`
+  - `removeNode(label: string): void`
+  - `addEdge(from: string, to: string): void`
+  - `removeEdge(from: string, to: string): void`
+  - `print(): void`  
+    _Format:_ `A is connected to [B, C]`
+
+> _Note: In real applications, visualization is handled outside the graph class._
+
+---
 
 ## Traversal Algorithms
 
-Graph traversal is the process of visiting all the nodes in a graph, starting from a given node. Unlike trees, graphs do not have a designated root node, so traversal can begin from any node. The nodes visited during traversal are those reachable from the starting node.
-
-**Real-world example:**  
-Finding all people who are directly or indirectly connected to a person in a social network graph.
-
-### Visual Example
-
-Suppose we have the following graph:
-
-```text
-A --- B
-|     |
-C --- D
-```
-
-- **Nodes:** A, B, C, D
-- **Edges:** (A-B), (A-C), (B-D), (C-D)
-
 ### Depth-First Search (DFS)
 
-- Starts at a given node and explores as far as possible along each branch before backtracking.
-- Can be implemented using recursion (call stack) or an explicit stack (iteration).
-- Useful for tasks like detecting cycles, pathfinding, and topological sorting.
+- Explores as far as possible along each branch before backtracking.
+- Implemented recursively or with an explicit stack.
+- **Use cases:** Cycle detection, pathfinding, topological sort.
 
-**DFS Example (starting from A):**
-
-```text
-Visit: A → B → D → C
-```
+**Example (start at A):**  
+`A → B → D → C`
 
 ### Breadth-First Search (BFS)
 
-- Starts at a given node and explores all its neighbors before moving to the next level of neighbors.
-- Implemented using a queue to keep track of nodes to visit next.
-- Useful for finding the shortest path in unweighted graphs and for level-order traversal.
+- Explores all neighbors at the current depth before moving deeper.
+- Uses a queue.
+- **Use cases:** Shortest path in unweighted graphs, level-order traversal.
 
-**BFS Example (starting from A):**
-
-```text
-Visit: A → B → C → D
-```
-
-**Key Points:**
-
-- In trees, traversal always starts from the root, and all nodes are reachable from it.
-- In graphs, there may be multiple connected components, so traversal from a node only visits nodes in its component.
+**Example (start at A):**  
+`A → B → C → D`
 
 ---
 
-```
-[C]           // Start from node C
-↓
-[A]           // C is connected to A
-↓
-[B]           // A is connected to B (excluding already visited nodes)
-↓
-[E]           // B is connected to E (excluding already visited nodes)
-↓
-[D]           // E is connected to D (excluding already visited nodes)
-```
+### Traversal Visuals
 
-This sequence shows the order in which nodes are discovered and visited during a depth-first traversal starting from node C.
-
-Here’s a clearer version of the content:
+#### DFS (from C):
 
 ```
-[C]           // Start from node C
+[C]
 ↓
-[A, B, D]     // C is connected to A, B, D
+[A]
 ↓
-[A]           // Visit A next
+[B]
 ↓
-[B, D, E]     // A is connected to B, D, E (excluding already visited nodes)
+[E]
 ↓
-[B]           // Visit B next
-↓
-[D, E]        // B is connected to D, E (excluding already visited nodes)
-↓
-[D]           // Visit D next
-↓
-[E]           // D is connected to E (excluding already visited nodes)
-↓
-[E]           // Visit E next (no new neighbors)
+[D]
 ```
 
-This sequence shows the order in which nodes are discovered and visited during a breadth-first traversal starting from node C.
-
-**Problem:**  
-I made a mistake in my commit message and had already pushed my branch to the remote. When I fixed the message with my `git fixmsg` alias, this created two different versions: one on the remote and one on my machine. To resolve this, I created a `git pushforce` alias that uses `git push --force-with-lease origin HEAD` to make the remote reflect what's on my machine. This solved the problem.
-
-### Iterative Depth-First Search (DFS) Traversal
-
-To implement DFS iteratively, we use an explicit stack to manage which nodes to visit next, mimicking the call stack used in recursion.
-
-#### How the Call Stack Works (Recap)
-
-- When you call a method like `methodA(x)`, Java (or any language) pushes the call and its arguments onto the call stack:
-  ```
-  Call Stack: [x]
-  ```
-- If `methodA(x)` calls `methodB(y)` before finishing, `y` is pushed on top:
-  ```
-  Call Stack: [x, y]
-  ```
-- When `methodB(y)` completes, `y` is popped off, and execution resumes in `methodA(x)`:
-  ```
-  Call Stack: [x]
-  ```
-- This mechanism allows the program to "remember" the state of each method call.
-
-#### Applying This to Iterative DFS
-
-- In recursive DFS, the call stack keeps track of which nodes to return to.
-- In iterative DFS, we use our own stack data structure to track nodes to visit.
-
-**Example Steps:**
-
-1. Push the starting node onto the stack.
-   ```
-   Stack: [start]
-   ```
-2. While the stack is not empty:
-   - Pop a node from the stack.
-   - If it hasn't been visited:
-     - Mark it as visited.
-     - Push all its unvisited neighbors onto the stack.
-
-This approach ensures we explore as far as possible along each branch before backtracking, just like recursive DFS.
-
-**Key Point:**  
-Using an explicit stack in iterative DFS serves the same purpose as the call stack in recursion: it remembers where to return after exploring deeper nodes.
-
-### Exercise: Iterative Breadth-First Traversal (BFS)
-
-Let's walk through an iterative BFS using a queue. At each step, we'll show the state of the queue and which node is visited.
-
-**Legend:**
-
-- **Front**: The front of the queue (where nodes are removed)
-- **Back**: The back of the queue (where nodes are added)
-
----
-
-#### 1. Start by adding the starting node (`A`) to the queue:
+#### BFS (from C):
 
 ```
-Queue: Front [A] Back
+[C]
+↓
+[A, B, D]
+↓
+[A]
+↓
+[B, D, E]
+↓
+[B]
+↓
+[D, E]
+↓
+[D]
+↓
+[E]
 ```
 
 ---
 
-#### 2. Begin the loop:
+## Iterative Traversal
 
-- Remove `A` from the front of the queue.
-- Visit `A`.
+### Iterative DFS
+
+- Use a stack to mimic the call stack.
+- Push starting node, pop and visit, push unvisited neighbors.
+
+### Iterative BFS
+
+- Use a queue.
+- Enqueue starting node, dequeue and visit, enqueue unvisited neighbors.
+
+**Example BFS Steps:**
 
 ```
+Queue: [A]
 Visited: A
-Queue: Front [] Back
-```
-
-- Add `A`'s unvisited neighbors (`B`, `C`) to the back of the queue.
-
-```
-Queue: Front [B, C] Back
-```
-
----
-
-#### 3. Next iteration:
-
-- Remove `B` from the front.
-- Visit `B`.
-
-```
+Queue: [B, C]
 Visited: A, B
-Queue: Front [C] Back
-```
-
-- Add `B`'s unvisited neighbor (`D`) to the back.
-
-```
-Queue: Front [C, D] Back
-```
-
----
-
-#### 4. Next iteration:
-
-- Remove `C` from the front.
-- Visit `C`.
-
-```
+Queue: [C, D]
 Visited: A, B, C
-Queue: Front [D] Back
-```
-
----
-
-#### 5. Final iteration:
-
-- Remove `D` from the front.
-- Visit `D`.
-
-```
+Queue: [D]
 Visited: A, B, C, D
-Queue: Front [] Back
 ```
+
+Order: `A → B → C → D`
 
 ---
-
-**Summary:**  
-The order of nodes visited using iterative BFS is:
-
-```
-A → B → C → D
-```
 
 ## Exercise: Topological Sorting
 
-Imagine you have a mobile app project (**P**) that depends on a few other projects. To build your project, all dependencies must be compiled in the correct order. But how do we find the right order? We use a graph!
+Used to order tasks/projects with dependencies (DAGs only).
 
-### Dependency Graph
+**Example Dependency Graph:**
 
 ```
      -> A ->
@@ -383,220 +214,61 @@ X             P
      -> B ->
 ```
 
-- **P** is our main project.
-- **A**: Image Manipulation library
-- **B**: Data Encryption library
-- Both **A** and **B** depend on **X** (a library of reusable building blocks).
+- **P** depends on **A** and **B**; both depend on **X**.
+- Valid build orders: `XABP`, `XBAP`, etc.
 
-### Build Order Logic
+**Algorithm:**
 
-- To build **P**, you must build **A** and **B** first.
-- To build **A** or **B**, you must build **X** first.
-- When we run a topological sort, we could get `XABP` or `XBAP` as valid build orders.
-- The exact order depends on the implementation.
-- **Note:** This algorithm only works on graphs **without cycles**.
-- Such a graph is called a **Directed Acyclic Graph (DAG)**:
-  - **Directed:** Edges have a direction (dependencies point one way).
-  - **Acyclic:** No cycles (no way to start at a node and come back to it by following edges).
-  - **Graph:** A collection of nodes and edges.
+- Use DFS.
+- After visiting all descendants, push node to a stack.
+- Pop stack for build order.
 
----
-
-### Step-by-Step Walkthrough
-
-**Stack:** `[P]`
-
-- Go back to **A**
-  - All children/neighbors of **A** (just **P**) have been visited, so add **A** to the stack.
-  - **Stack:** `[P, A]`
-- Go back to **X**
-  - Not all children of **X** have been visited.
-  - Go to **B**.
-    - Go to **P** (already visited).
-    - Go back to **B**.
-      - All children of **B** have been visited, so add **B** to the stack.
-      - **Stack:** `[P, A, B]`
-- Go back to **X**
-  - All children of **X** have now been visited, so add **X** to the stack.
-  - **Stack:** `[P, A, B, X]`
-- If we pop our stack until it's empty, the nodes come out in the correct build order.
-
-> **Key Insight:**  
-> We go deep in our graph and find nodes that don't have any outgoing edges (dependencies).
-
----
-
-### What if we started from **P**?
-
-- You wouldn't be able to visit any nodes, since **P** depends on others.
-
----
-
-### Implementation Notes
-
-- Use a **for loop** and a **depth-first traversal** on each node.
-- This ensures every node in the graph is eventually visited.
-
----
-
-### Exercise
-
-1. **Build the graph** described above.
-2. **Add all the nodes and edges.**
-3. **Add a new method** to your `Graph` class called `topologicalSort()` that returns a `List<string>`.
-   - This should be a public method.
-   - You will need a private method that does all the recursive work (just like `traverseDepthFirstRec()`).
-   - Instead of printing the node, mark it as visited, recursively visit all its children, and then push it to a stack.
-   - Nodes deeper in the hierarchy will end up at the bottom of the stack—these are the nodes that are dependent on a lot of other nodes.
-
----
-
-#### **Memory Aid**
-
-- **DAG** = **Directed Acyclic Graph**
-  - **Directed:** Edges have direction (dependencies).
-  - **Acyclic:** No cycles allowed.
-  - **Graph:** Structure of nodes and edges.
+**Exercise:**  
+Implement `topologicalSort(): List<string>` in your `Graph` class.
 
 ---
 
 ## Exercise: Cycle Detection
 
-Topological sorting **does not work** if the graph contains a cycle. So, how can we detect a cycle in a directed graph?
+Topological sort only works on DAGs. To detect cycles:
 
-### Cycle Detection with DFS and Node States
+### DFS with Node States
 
-To detect cycles, we use **three sets** (or "colors") to track the state of each node during traversal:
+- **All:** Not started (white)
+- **Visiting:** In current DFS path (gray)
+- **Visited:** Fully explored (black)
 
-1. **All nodes**: Nodes we have not yet started visiting.
-2. **Visiting**: Nodes currently in the recursion stack (being explored).
-3. **Visited**: Nodes for which all descendants have been fully explored.
+**Cycle exists if:**  
+During DFS, you revisit a node in the "visiting" set.
 
-- The key difference:
-  - A node is in the **visiting** set while we are exploring its descendants.
-  - Once all its descendants are explored, we move it to the **visited** set.
+**Example:**
 
-#### Interview Variant: "Coloring" Nodes
+- `A → B → C → A` forms a cycle.
 
-- Instead of "visiting" and "visited," you may see nodes colored as **white** (unvisited), **gray** (visiting), and **black** (visited).
-
----
-
-### Example 1: No Cycle
-
-Graph:
-
-```
-A → B, C
-B → C
-D → A
-```
-
-**Step-by-step:**
-
-1. Add all nodes to the "all" set:  
-   `[A, B, C, D]`
-2. Start DFS from `A`:
-   - all: `[B, C, D]`
-   - visiting: `[A]`
-3. Explore neighbors of `A` (`B`):
-   - all: `[C, D]`
-   - visiting: `[A, B]`
-4. Explore neighbors of `B` (`C`):
-   - all: `[D]`
-   - visiting: `[A, B, C]`
-   - `C` has no neighbors, so move `C` to visited:
-     - all: `[D]`
-     - visiting: `[A, B]`
-     - visited: `[C]`
-   - Done with `B`, move to visited:
-     - all: `[D]`
-     - visiting: `[A]`
-     - visited: `[C, B]`
-   - Back to `A`. Next neighbor is `C`, but it's already visited.
-   - Done with `A`, move to visited:
-     - all: `[D]`
-     - visiting: `[]`
-     - visited: `[C, B, A]`
-5. Still one node left (`D`). Start DFS from `D`:
-   - all: `[]`
-   - visiting: `[D]`
-   - `D` has neighbor `A`, but `A` is already visited.
-   - Done with `D`, move to visited:
-     - all: `[]`
-     - visiting: `[]`
-     - visited: `[C, B, A, D]`
-
-**Result:**  
-No cycle found.
+**Exercise:**  
+Implement `hasCycle(): boolean` in your `Graph` class.
 
 ---
 
-### Example 2: Cycle Exists
-
-Graph:
-
-```
-A → B
-B → C
-C → A
-D → A
-```
-
-**Step-by-step:**
-
-1. Add all nodes to the "all" set:  
-   `[A, B, C, D]`
-2. Start DFS from `A`:
-   - all: `[B, C, D]`
-   - visiting: `[A]`
-3. Explore neighbor `B`:
-   - all: `[C, D]`
-   - visiting: `[A, B]`
-4. Explore neighbor `C`:
-   - all: `[D]`
-   - visiting: `[A, B, C]`
-5. `C` has neighbor `A`.
-   - `A` is **already in the visiting set** (recursion stack).
-   - This means we've found a **cycle**: there is a path from `A` → `B` → `C` → `A`.
-
-**Key Insight:**  
-If during DFS you reach a node that is already in the **visiting** set, a cycle exists.
-
----
-
-### Tracking the Cycle Path
-
-To print the nodes involved in the cycle, keep a **parent map** during traversal:
-
-| Node | Parent |
-| ---- | ------ |
-| A    | null   |
-| B    | A      |
-| C    | B      |
-
-When you detect a cycle (e.g., `C` → `A`), you can reconstruct the path by following parents:  
-`A → B → C → A`
-
----
-
-### Implementation Exercise
-
-- **Implement** this algorithm.
-- **Add** a new method to your `Graph` class: `hasCycle()`.
-- This method should return a `boolean` indicating whether the graph contains a cycle.
-
----
-
-**Summary Table: Node States**
+## Summary Table: Node States
 
 | State    | Meaning                               | Color (variant) |
 | -------- | ------------------------------------- | --------------- |
 | All      | Not yet started                       | White           |
 | Visiting | In current DFS path (recursion stack) | Gray            |
-| Visited  | Fully explored (all descendants done) | Black           |
+| Visited  | Fully explored                        | Black           |
+
+> **Tip:**  
+> Cycle detection is essential for algorithms like topological sort.
 
 ---
 
-> **Tip:**  
-> Cycle detection is essential for algorithms like topological sort, which only work on Directed Acyclic Graphs (DAGs).
+## Further Reading
+
+- [Graph Theory (Wikipedia)](https://en.wikipedia.org/wiki/Graph_theory)
+- [Adjacency Matrix vs List](https://www.geeksforgeeks.org/graph-and-its-representations/)
+- [DFS and BFS Visualizations](https://visualgo.net/en/dfsbfs)
+
+---
+
+Happy graph coding!
